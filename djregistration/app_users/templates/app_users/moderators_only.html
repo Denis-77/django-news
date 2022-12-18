@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Страница модератора</title>
+</head>
+<body>
+  <a href="{% url 'main' %}">назад</a>
+  {% if unverified %}
+  <h2>Запросы на верификацию</h2>
+  <form method="post" action="{% url 'moderators_page' %}">
+    <ul>
+    {% for user in unverified %}
+      {% csrf_token %}
+        <li>
+          <h3 style="display: inline-block; width: 200px; margin: 0;">{{ user }}</h3>
+          <input type="checkbox" name="verify{{ user.id }}" value="True">
+        </li>
+    {% endfor %}
+    </ul>
+    <button type="submit">Верифицировать</button>
+  </form>
+    {% else %}
+  <h2>Нет запросов на верификацию</h2>
+  {% endif %}
+  {% if unpublished %}
+  <h2>Запросы на публикацию новостей</h2>
+  <form method="post" action="{% url 'moderators_page' %}">
+    <ul>
+    {% for news in unpublished %}
+      {% csrf_token %}
+        <li style=" max-width: 750px;">
+          <h3 style="margin-bottom: 10px;">{{ news.title }}</h3>
+          <i style="margin-bottom: 20px;">{{news.creation_date}}</i>
+          <p style="margin-bottom: 20px;">{{ news.content }}</p>
+          <label>
+            <input type="radio" name="publish{{ news.id }}" value="True">Опубликовать
+          </label>
+          <label>
+            <input type="radio" name="publish{{ news.id }}" value="False">Удалить
+          </label>
+        </li>
+    {% endfor %}
+    </ul>
+    <button type="submit">Готово</button>
+  </form>
+  {% else %}
+  <h2>Нет запросов на публикацию</h2>
+  {% endif %}
+</body>
+</html>

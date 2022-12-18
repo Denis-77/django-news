@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мой профиль</title>
+</head>
+<body>
+  <h2>Мой профиль</h2>
+  <a href="{% url 'main' %}">Назад</a>
+  <p>Логин: {{ user.username }}</p>
+  <p>Имя: {{ user.first_name }}</p>
+  <p>Фамилия: {{ user.last_name }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Телефон: {{ user.profile.phone_number }}</p>
+  <p>Город: {{ user.profile.city }}</p>
+  <p>Количество опубликованных новостей: {{ user.profile.news_count }}</p>
+  <p>Верифицирован: {% if user.profile.is_verified %} ✅ {% else %} ❌ {% endif %}</p>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Главная</title>
+</head>
+<body>
+    <header>
+    {% if request.user.is_authenticated %}
+      <h2>Привет, {{ request.user.username }}</h2>
+      <a href="{% url 'account' %}">Мой профиль</a>
+      <a href="{% url 'logout' %}">Выйти</a><br>
+      {% if request.user.profile.is_verified %}
+      <a href="{% url 'create' %}">Создать новость</a>
+      {% endif %}
+      {% if is_moderator %}
+        <a href="{% url 'moderators_page' %}">Страница модератора</a>
+      {% endif %}
+    {% else %}
+      <p>Чтобы создавать и редактировать новости <a href="{% url 'login' %}">войдите</a> в аккаунт или <a href="{% url 'registration' %}">создайте новый</a></p>
+    {% endif %}
+  </header>
+  <h1>Новости</h1>
+    <form method="get" action="">
+      <select name="filter">
+        <option value="0">Все</option>
+        <option value="1">Последние</option>
+        <option value="2">IT</option>
+        <option value="3">Политика</option>
+        <option value="4">Погода</option>
+      </select>
+      <button type="submit">ok</button>
+    </form>
+  {% if all_news %}
+    <ul>
+    {% for news in all_news %}
+      {% if news.is_published %}
+      <li style="margin-bottom: 35px">
+        <a style="display: flex; flex-direction: column; margin-bottom: 35px; width: max-content; text-decoration: none; color: inherit;" href="/news/{{ news.id }}/">
+          <h2 style="width: max-content; margin: 0;">{{ news.title }}</h2>
+          <i style="margin-bottom:20px; width: max-content;">{{news.creation_date}}</i>
+          <p style="margin:0; max-width: 750px;">{{ news.content }}</p>
+          <div>Тэги:
+          {% for tag in news.news_tag.all %}
+            <i>#{{ tag }}</i>
+          {% endfor %}
+          </div>
+          <p style="margin:0; max-width: 750px; color: blue;">Подробнее...</p>
+        </a>
+        {% if request.user == news.user %}
+        <a style="padding: 5px; border: 1px solid red; border-radius: 5px" href="/news/{{ news.id }}/edit/">Изменить -></a>
+        {% endif %}
+      </li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>Новостей пока нет 😔 </p>
+  {% endif %}
+</body>
+</html>

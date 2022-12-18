@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ news.title }}</title>
+</head>
+<body>
+  <a href="/">Назад</a>
+  <h2 style=" margin-bottom: 10px; text-align: center;">{{ news.title }}</h2>
+  <i style="display: block; text-align: center; margin-bottom: 20px;">{{news.creation_date}}</i>
+  <p style="display: block; max-width: 750px; margin: 0 auto 20px;">{{ news.content }}</p>
+  <div>Тэги:
+  {% for tag in news.news_tag.all %}
+    <i>#{{ tag }}</i>
+  {% endfor %}
+  </div>
+  <h3>Комментарии:</h3>
+  {% if comments %}
+    <ul>
+      {% for comment in comments %}
+        <li>
+          {% if not comment.user %}
+          <b>{{ comment.username }} (Неавторизованный пользователь)</b>
+          {% else %}
+            {% if comment.user.first_name %}
+              <b>{{ comment.user.first_name }}</b>
+            {% else %}
+              <b>{{ comment.user.username }}</b>
+            {% endif %}
+          {% endif %}
+          <p>{{ comment.comment_text }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Комментариев пока нет</p>
+  {% endif %}
+  <div style="padding: 10px; border: 1px solid grey; max-width: 600px; box-shadow: 5px 3px 5px black; border-radius: 10px;">
+    <h3>Написать комментарий:</h3>
+    {% if user.is_authenticated %}
+      <span>Имя пользователя:</span>
+      {% if user.first_name %}
+        <span>{{ user.first_name }}</span>
+      {% else %}
+        <span>{{ user.username }}</span>
+      {% endif %}
+    {% endif %}
+    <form method="post" action="/news/{{ news.id }}/">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Сохранить</button>
+    </form>
+  </div>
+</body>
+</html>

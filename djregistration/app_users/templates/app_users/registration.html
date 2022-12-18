@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация</title>
+</head>
+<body>
+  <h2>Форма регистрации</h2>
+  <form method="post" action="{% url 'registration' %}">
+    {% csrf_token %}
+    {% for field in form %}
+    <div style="margin-bottom: 20px;">
+      <label style="display:inline-block; width: 200px;">{{ field.label }}</label>
+      {{ field }}
+      <div style="margin-top:0; padding-left: 200px; max-width: 2000px">
+        <span style="white-space:pre;">{{ field.help_text }}</span>
+      </div>
+      {% for er in field.errors %}
+        {{ er }}
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <button type="submit">Готово</button>
+  </form>
+</body>
+</html>
